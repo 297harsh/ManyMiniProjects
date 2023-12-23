@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+    <style>
+      .audio {
+        position: relative;
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <blockquote class="blockquote">
+      <p>
+        Quotes Website
+      </p>
+    </blockquote>
+
+    <blockquote class="otro-blockquote">
+      <div id="quotes"></div>
+      <div id="author"></div>
+      <br />
+      <button class="button-17" role="button" id="New">New Quotes</button>
+      <div class="audio">
+        <a href="" id="audioButton">
+            <img src="images/audio.png" alt="" />
+        </a>
+    </div>
+      </div>
+      <!-- <button id="New"> New Quotes </button> -->
+      <!-- <button id="tweetme!">Tweet</button> -->
+    </blockquote>
+<footer>
+    <center style="background-color: #78c0a8">
+      <div class="social_box">
+        <a href="">
+          <img src="images/facebook-logo.png" alt="" />
+        </a>
+        <a href="" id="tweetme">
+          <img src="images/twitter.png" alt="" />
+        </a>
+        <a href="">
+          <img src="images/instagram-logo.png" alt="" />
+        </a>
+      </div>
+    </center>
+
+  </footer>
+
+    <script>
+      const quotes = document.getElementById("quotes");
+      const authors = document.getElementById("author");
+      const button = document.getElementById("New");
+      const tweetMe = document.getElementById("tweetme");
+      const audioButton = document.getElementById("audioButton");
+
+      
+      let realdata = "";
+
+      const tweetNow = () => {
+        let tweetPost = `http://twitter.com/intent/tweet`;
+        // let tweetPost=`http://twitter.com/intent/tweet?text=${quotesData.text}`;
+        // window.open(tweetPost,text)
+        window.open(tweetPost);
+      };
+      const getNewQuotes = () => {
+        let rnum = Math.floor(Math.random() * 43);
+        quotesData = realdata[rnum];
+        quotes.innerText = `${realdata[rnum].Quote}`;
+        realdata[rnum].Author == null
+          ? (authors.innerText = "Unkown")
+          : (authors.innerText = `${realdata[rnum].Author}`);
+      };
+
+      const getQuotes = async () => {
+        const api = "Api.json";
+        try {
+          let data = await fetch(api);
+          realdata = await data.json();
+          getNewQuotes();
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      
+      button.addEventListener("click", getNewQuotes);
+      getQuotes();
+
+      tweetMe.addEventListener("click", tweetNow);
+
+    // const getaudio = async () => {
+    function getaudio(){
+
+      
+        const quotesDiv = document.getElementById("quotes");
+        const quotesValue = quotesDiv.innerText;
+
+        const authorQuotes =quotesValue;
+
+        const authorDiv = document.getElementById("author");
+        const authorName = authorDiv.innerText;
+        let autherintro =""
+        if(authorName!="Unkown"){
+            autherintro =` Those are the words of ${authorName}`
+        }
+
+        // Those are the words of [author name].
+        if ("speechSynthesis" in window) {
+          const synthesis = window.speechSynthesis;
+          const utterance = new SpeechSynthesisUtterance(authorQuotes+""+autherintro);
+          synthesis.speak(utterance);
+        } 
+        else {
+          alert("Your browser does not support the Web Speech API.");
+        }
+      };
+      audioButton.addEventListener("click", getaudio);
+
+    </script>
+  </body>
+</html>
